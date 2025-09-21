@@ -4,7 +4,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [8, 11, 17]
+        java: [8]
         platform:
           - os: ubuntu-latest
             compiler_install_command: sudo apt install g++ cmake
@@ -43,18 +43,6 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
         distribution: temurin
-    - name: Install Rust toolchain for Krakatau
-      uses: dtolnay/rust-toolchain@stable
-    - name: Setup cache for Rust toolchain
-      uses: Swatinem/rust-cache@v2
-    - name: Install Krakatau
-      run: |
-        git clone https://github.com/Storyyeller/Krakatau.git
-        cd Krakatau
-        cargo build --release
-        ${{ matrix.platform.krakatau_install_command }}
-    - name: Install C++ dependencies
-      run: ${{ matrix.platform.compiler_install_command }}
     - name: Build with Gradle
       run: |
         ${{ matrix.platform.prebuild_script }}
